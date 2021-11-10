@@ -49,8 +49,6 @@ async function run() {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const product = await productsCollection.findOne(query);
-            // console.log('req id', id);
-            // console.log(product);
             res.json(product);
         });
 
