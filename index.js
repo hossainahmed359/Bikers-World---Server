@@ -1,3 +1,4 @@
+const ObjectId = require('mongodb').ObjectId;
 const { MongoClient } = require('mongodb');
 const port = process.env.PORT || 5000;
 const express = require('express');
@@ -41,6 +42,16 @@ async function run() {
             const cursor = productsCollection.find({});
             const products = await cursor.toArray();
             res.json(products);
+        });
+
+        // get signle product || GET
+        app.get('/signleProduct/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const product = await productsCollection.findOne(query);
+            // console.log('req id', id);
+            // console.log(product);
+            res.json(product);
         });
 
     }
