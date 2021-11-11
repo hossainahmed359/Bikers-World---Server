@@ -37,6 +37,7 @@ async function run() {
         const productsCollection = database.collection('products');
         const ordersCollection = database.collection('orders');
 
+
         // get all products || GET
         app.get('/products', async (req, res) => {
             const query = {};
@@ -44,6 +45,7 @@ async function run() {
             const products = await cursor.toArray();
             res.json(products);
         });
+
 
         // get signle product || GET
         app.get('/signleProduct/:id', async (req, res) => {
@@ -61,6 +63,15 @@ async function run() {
             res.json(result);
         });
 
+
+        // Find Orders with email || GET
+        app.get('/findOrder/:userEmail', async (req, res) => {
+            const userEmail = req.params.userEmail;
+            const query = { email: userEmail };
+            const cursor = ordersCollection.find(query);
+            const orders = await cursor.toArray()
+            res.json(orders);
+        });
     }
     catch {
         //
