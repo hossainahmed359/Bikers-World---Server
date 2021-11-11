@@ -35,6 +35,7 @@ async function run() {
         // Get database
         const database = client.db('bikersDB');
         const productsCollection = database.collection('products');
+        const ordersCollection = database.collection('orders');
 
         // get all products || GET
         app.get('/products', async (req, res) => {
@@ -50,6 +51,14 @@ async function run() {
             const query = { _id: ObjectId(id) };
             const product = await productsCollection.findOne(query);
             res.json(product);
+        });
+
+
+        // Place Order || POST
+        app.post('/order', async (req, res) => {
+            const order = req.body;
+            const result = await ordersCollection.insertOne(order);
+            res.json(result);
         });
 
     }
