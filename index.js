@@ -113,7 +113,6 @@ async function run() {
         // Create User after google sign in || PUT
         app.put('/user', async (req, res) => {
             const user = req.body;
-            console.log(user)
             const filter = { email: user.email };
             const options = { upsert: true };
             const updateDoc = { $set: user };
@@ -140,6 +139,28 @@ async function run() {
             }
             else {
                 res.json('unauthorized');
+
+            }
+        });
+
+        // Check Admin
+        app.get('/checkIsAdmin/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const user = await usersCollection.findOne(query);
+            if (user) {
+                if (user.role === 'admin') {
+                    const result = { isAdmin: true };
+                    res.json(result);
+                }
+                else {
+                    const result = { isAdmin: false };
+                    res.json(result);
+                }
+            }
+            else {
+                const result = { isAdmin: false };
+                res.json(result)
 
             }
         });
