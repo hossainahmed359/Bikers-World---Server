@@ -36,7 +36,8 @@ async function run() {
         const database = client.db('bikersDB');
         const productsCollection = database.collection('products');
         const ordersCollection = database.collection('orders');
-        const ratingsCollection = database.collection('ratings')
+        const ratingsCollection = database.collection('ratings');
+        const usersCollection = database.collection('users');
 
 
         // get all products || GET
@@ -83,10 +84,40 @@ async function run() {
             res.json(result);
         });
 
+
         // Add User Rating || POST
         app.post('/ratings', async (req, res) => {
             const userRating = req.body;
             const result = await ratingsCollection.insertOne(userRating);
+            res.json(result);
+        });
+
+
+        // Get Ratingns || GET
+        app.get('/ratings', async (req, res) => {
+            const query = {};
+            const cursor = ratingsCollection.find(query);
+            const ratings = await cursor.toArray();
+            res.json(ratings);
+        });
+
+
+        // Create User after registration || POST
+        app.post('/user', async (req, res) => {
+            const user = req.body;
+            const result = await usersCollection.insertOne(user);
+            res.json(result);
+        });
+
+
+        // Create User after google sign in || PUT
+        app.put('/user', async (req, res) => {
+            const user = req.body;
+            console.log(user)
+            const filter = { email: user.email };
+            const options = { upsert: true };
+            const updateDoc = { $set: user };
+            const result = await usersCollection.updateOne(filter, updateDoc, options);
             res.json(result);
         });
 
