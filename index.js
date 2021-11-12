@@ -122,6 +122,15 @@ async function run() {
         });
 
 
+        // Make Admin || PUT
+        app.put('/makeAdmin', async (req, res) => {
+            const email = req.body.email;
+            const filter = { email: email };
+            const updateDoc = { $set: { role: 'admin' }, };
+            const result = await usersCollection.updateOne(filter, updateDoc);
+            res.json(result);
+        });
+
     }
     catch {
         //
