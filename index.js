@@ -58,6 +58,14 @@ async function run() {
         });
 
 
+        // Insert A product || POST
+        app.post('/addProduct', async (req, res) => {
+            const productInfo = req.body
+            const result = await productsCollection.insertOne(productInfo);
+            res.json(result);
+        });
+
+
         // Place Order || POST
         app.post('/order', async (req, res) => {
             const order = req.body;
