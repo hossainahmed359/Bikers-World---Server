@@ -66,6 +66,32 @@ async function run() {
         });
 
 
+        // Find All Orders
+        app.get('/allOrders/:email', async (req, res) => {
+
+            // Verify Admin
+            const adminEmail = req.params.email;
+            const query = { email: adminEmail };
+            const requester = await usersCollection.findOne(query);
+            if (requester) {
+                if (requester.role === 'admin') {
+                    const query = {};
+                    const cursor = ordersCollection.find(query);
+                    const orders = await cursor.toArray();
+                    res.json(orders)
+                }
+
+                else {
+                    res.json('Unauthorized Email')
+                }
+            }
+            else {
+                res.json('Unauthorized Email')
+            }
+        });
+
+
+
         // Find Orders with email || GET
         app.get('/findOrder/:userEmail', async (req, res) => {
             const userEmail = req.params.userEmail;
@@ -81,6 +107,18 @@ async function run() {
             const orderId = req.params.orderId;
             const query = { _id: ObjectId(orderId) };
             const result = await ordersCollection.deleteOne(query);
+            res.json(result);
+        });
+
+
+        // Upadate Order Status || PUT
+        app.put('/updateOrder/:orderId', async (req, res) => {
+            const orderId = req.params.orderId;
+            const filter = { _id: ObjectId(orderId) };
+            const updateDoc = {
+                $set: { "cart.status": "shipped" }
+            };
+            const result = await ordersCollection.updateOne(filter, updateDoc);
             res.json(result);
         });
 
