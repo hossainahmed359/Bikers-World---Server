@@ -36,6 +36,7 @@ async function run() {
         const database = client.db('bikersDB');
         const productsCollection = database.collection('products');
         const ordersCollection = database.collection('orders');
+        const ratingsCollection = database.collection('ratings')
 
 
         // get all products || GET
@@ -81,6 +82,15 @@ async function run() {
             const result = await ordersCollection.deleteOne(query);
             res.json(result);
         });
+
+        // Add User Rating || POST
+        app.post('/ratings', async (req, res) => {
+            const userRating = req.body;
+            const result = await ratingsCollection.insertOne(userRating);
+            res.json(result);
+        });
+
+
     }
     catch {
         //
