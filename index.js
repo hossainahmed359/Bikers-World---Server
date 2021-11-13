@@ -66,6 +66,15 @@ async function run() {
         });
 
 
+        // Delete A product || DELETE
+        app.delete('/deleteProduct/:productId', async (req, res) => {
+            const productId = req.params.productId;
+            const query = { _id: ObjectId(productId) };
+            const result = await productsCollection.deleteOne(query);
+            res.json(result);
+        });
+
+
         // Place Order || POST
         app.post('/order', async (req, res) => {
             const order = req.body;
